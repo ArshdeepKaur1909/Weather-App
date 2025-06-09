@@ -1,8 +1,10 @@
+import SearchBox from "./searchBox";
+
 function WeatherApp(){
   return(
-    <div classname="SearchBox" >
-        
-    </div>
+    <>
+      <SearchBox></SearchBox>
+    </>
   );
 }
 
