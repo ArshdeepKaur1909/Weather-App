@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {useState} from "react";
 
-function SearchBox(){
+function SearchBox({updateWeather}){
   const [city, setCity] = useState("");
 
   let changeCity = function(event){
@@ -17,8 +17,8 @@ function SearchBox(){
   let getWeather = async function(){
     let response = await fetch(`${API}?q=${city}&appid=${key}&units=metric`);
     let jsonResponse = await response.json();
-    console.log(jsonResponse);
     let result = {
+      city: city,
       temp: jsonResponse.main.temp,
       temp_min: jsonResponse.main.temp_min,
       temp_max: jsonResponse.main.temp_max,
@@ -26,13 +26,14 @@ function SearchBox(){
       feels_like: jsonResponse.main.feels_like,
       weather: jsonResponse.weather[0].description
     }
-    console.log(result);
+    return result;
   }
 
-  let submitForm = function(event){
+  let submitForm = async function(event){
     event.preventDefault();
     setCity("");
-    getWeather();
+    let newInfo = await getWeather();
+    updateWeather(newInfo);
   }
 
   return (
