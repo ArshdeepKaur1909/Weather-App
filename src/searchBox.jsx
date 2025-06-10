@@ -10,9 +10,29 @@ function SearchBox(){
     setCity(event.target.value);
   }
   
+  let API = "https://api.openweathermap.org/data/2.5/weather";
+  let key = "28cbc82634560a6cc40128e81512fc09"
+
+
+  let getWeather = async function(){
+    let response = await fetch(`${API}?q=${city}&appid=${key}&units=metric`);
+    let jsonResponse = await response.json();
+    console.log(jsonResponse);
+    let result = {
+      temp: jsonResponse.main.temp,
+      temp_min: jsonResponse.main.temp_min,
+      temp_max: jsonResponse.main.temp_max,
+      humidity: jsonResponse.main.humidity,
+      feels_like: jsonResponse.main.feels_like,
+      weather: jsonResponse.weather[0].description
+    }
+    console.log(result);
+  }
+
   let submitForm = function(event){
     event.preventDefault();
     setCity("");
+    getWeather();
   }
 
   return (
