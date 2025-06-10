@@ -5,6 +5,7 @@ import {useState} from "react";
 
 function SearchBox({updateWeather}){
   const [city, setCity] = useState("");
+  const [error, setError] = useState(false)
 
   let changeCity = function(event){
     setCity(event.target.value);
@@ -15,6 +16,8 @@ function SearchBox({updateWeather}){
 
 
   let getWeather = async function(){
+  try{ 
+    setError(false);
     let response = await fetch(`${API}?q=${city}&appid=${key}&units=metric`);
     let jsonResponse = await response.json();
     let result = {
@@ -27,13 +30,20 @@ function SearchBox({updateWeather}){
       weather: jsonResponse.weather[0].description
     }
     return result;
+  }  catch(err){
+    throw err;
+    }
   }
 
   let submitForm = async function(event){
-    event.preventDefault();
-    setCity("");
-    let newInfo = await getWeather();
-    updateWeather(newInfo);
+    try{
+      event.preventDefault();
+      setCity("");
+      let newInfo = await getWeather();
+      updateWeather(newInfo);
+    }catch(err){
+    setError(true);
+  }
   }
 
   return (
@@ -44,6 +54,7 @@ function SearchBox({updateWeather}){
             <br /> <br />
             <Button variant="contained" type="Submit" >Search</Button>
             <br /> <br />
+            { error ? <Button variant="outlined" color="error">No Such Place</Button> : null}
         </form>
     </div>
   );
